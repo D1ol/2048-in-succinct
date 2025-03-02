@@ -1,4 +1,4 @@
-# 2048-in-superform
+# 2048-in-succinct
 
 forked
 
