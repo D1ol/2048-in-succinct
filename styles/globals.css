@@ -2,14 +2,14 @@
   --pixel-size: 8px;
 
   /* Backgrounds */
-  --primary-background: #faf8ef;
-  --secondary-background: #b59d87;
-  --cell-background: #cebda6;
-  --tile-background: #eee4da;
-  --button-background: #8f7a66;
+  --primary-background: #e2c1e8;
+  --secondary-background: #d18ade;
+  --cell-background: #d351e1;
+  --tile-background: #bd44dc;
+  --button-background: #af3be0;
 
   /* Colors */
-  --primary-text-color: #776e65;
+  --primary-text-color: #a637de;
   --secondary-text-color: #f9f6f2;
 }
 
