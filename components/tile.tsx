@@ -58,6 +58,7 @@ export default function Tile({ position, value }: TileProps) {
       ) : (
         value
       )}
+      <div className={styles.tileOverlay}>{value}</div>
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import Head from "next/head";
 import Board from "@/components/board";
-import Score from "@/components/score";
-import Timer from "@/components/timer";
 import SaveForm from "@/components/saveForm";
+import DropdownMenu from "@/components/dropdown";
 import styles from "@/styles/index.module.css";
 import { useRouter } from "next/router";
 import Socials from "@/components/socials";
+import ScoreTimer from "@/components/scoreTimer";
+
 
 export default function Home() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function Home() {
     <div className={styles.twenty48}>
       <Head>
         <title>Play 2048</title>
-        <meta name="description" content="Friendly 2048 Superform theme game" />
+        <meta name="description" content="Succinct 2048 V2 Edition" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="favicon.ico" />
         <link
@@ -41,13 +42,13 @@ export default function Home() {
       </div>
       <header>
         <h1>2048</h1>
-        <Score />
+        <ScoreTimer />
       </header>
       <main>
         <Board />
       </main>
       <div>
-        <Timer />
+        <DropdownMenu />
       </div>
       <div>
         <SaveForm />

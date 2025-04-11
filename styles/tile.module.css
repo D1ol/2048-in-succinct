@@ -141,3 +141,20 @@
   height: 100%;
   object-fit: cover;
 }
+
+.tileOverlay {
+  position: absolute;
+  bottom: 1%;
+  right: 1%;
+  width: 25%;
+  height: 25%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: calc(var(--pixel-size) * 2);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  z-index: 3;
+}

@@ -1,26 +1,37 @@
 import React, {
   useCallback,
   useContext,
-  useEffect,
-  useReducer,
   useState,
+  useRef,
+  useReducer, useEffect
 } from "react";
 import styles from "@/styles/saveForm.module.css";
 import { GameContext } from "@/context/game-context";
 import statusReducer, { initialState } from "@/reducers/status-reducer";
+import sha256 from 'crypto-js/sha256';
+import base64 from 'crypto-js/enc-base64'
 
-interface NameInputProps {}
 
-const SaveForm: React.FC<NameInputProps> = () => {
+interface NameInputProps {
+}
+
+const SaveForm: React.FC<NameInputProps> = (props) => {
   const { score, status, time } = useContext(GameContext);
+
   const [name, setName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [statusState, dispatch] = useReducer(statusReducer, initialState);
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
+  const scoreRef = useRef(score);
+  const statusRef = useRef(status);
+  const timeRef = useRef(time);
+
+  useEffect(() => {
+    scoreRef.current = score;
+    statusRef.current = status;
+    timeRef.current = time;
+  }, [score, status, time]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -31,7 +42,20 @@ const SaveForm: React.FC<NameInputProps> = () => {
     }
   }, []);
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
   const handleSubmit = useCallback(async () => {
+    const apiSalt = Number(process.env.NEXT_PUBLIC_API_SALT);
+    const jsonString = JSON.stringify({
+      name,
+      score: scoreRef.current,
+      status: statusRef.current,
+      time: timeRef.current
+    });
+    const generatedSalt = sha256(jsonString + apiSalt).toString(base64);
+
     if (!statusState.subscribed) {
       window.open("https://x.com/diol4ik", "_blank");
       dispatch({ type: "change_subscribe", status: true });
@@ -46,7 +70,7 @@ const SaveForm: React.FC<NameInputProps> = () => {
       return;
     }
 
-    if (score < 2) {
+    if (scoreRef.current < 2) {
       setError("Try to play better");
       return;
     }
@@ -60,7 +84,7 @@ const SaveForm: React.FC<NameInputProps> = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, score, status, time }),
+        body: JSON.stringify({ name, score: scoreRef.current, status: statusRef.current, time: timeRef.current, generatedSalt }),
       });
 
       if (response.ok) {
@@ -74,7 +98,7 @@ const SaveForm: React.FC<NameInputProps> = () => {
     } finally {
       setLoading(false);
     }
-  }, [name, score, status, time, loading, statusState.subscribed]);
+  }, [statusState.subscribed, loading, name]);
 
   return (
     <div>
@@ -96,7 +120,7 @@ const SaveForm: React.FC<NameInputProps> = () => {
           ? "Saving..."
           : statusState.subscribed
             ? "Save score"
-            : "Follow on X"}
+            : "Save / Follow on X"}
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
